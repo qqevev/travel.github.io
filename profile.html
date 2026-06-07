@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль - TravelTogether</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+        
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--primary-light);
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-umbrella-beach"></i>
+                <span>TravelTogether</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="#explore"><i class="fas fa-compass"></i> Исследовать</a>
+                <a href="#trips"><i class="fas fa-suitcase"></i> Поездки</a>
+                <a href="#map"><i class="fas fa-map-marked-alt"></i> Карта</a>
+                <a href="#community"><i class="fas fa-users"></i> Сообщество</a>
+                
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">
+                        <img src="images/avatars/default.jpg" alt="Аватар">
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-circle"></i> Мой профиль</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="admin.html" id="adminLink" style="display: none;"><i class="fas fa-shield-alt"></i> Админ-панель</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="profile-container">
+        <div class="profile-header">
+    <div class="profile-avatar">
+        <img src="images/avatars/default.jpg" alt="Аватар" id="profileAvatar">
+    </div>
+    <div class="profile-info">
+        <h1 id="profileName">Иван Иванов</h1>
+        <p id="profileEmail">user@example.com</p>
+        <p id="profileBio">Люблю путешествовать и открывать новые места!</p>
+        
+        <div class="profile-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="tripsCount">12</div>
+                <div class="stat-label">Поездок</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="friendsCount">24</div>
+                <div class="stat-label">Друзей</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="countriesCount">8</div>
+                <div class="stat-label">Стран</div>
+            </div>
+        </div>
+        
+        <button class="btn btn-outline" id="editProfileBtn">
+            <i class="fas fa-edit"></i> Редактировать профиль
+        </button>
+    </div>
+</div>
+        
+        <div class="profile-tabs">
+            <button class="tab-btn active" data-tab="myTrips">Мои поездки</button>
+            <button class="tab-btn" data-tab="friends">Друзья</button>
+            <button class="tab-btn" data-tab="photos">Фото</button>
+        </div>
+        
+        <div id="myTrips" class="tab-content active">
+            <!-- Список поездок пользователя -->
+            <div class="trips-grid" id="userTripsContainer"></div>
+        </div>
+        
+        <div id="friends" class="tab-content">
+            <!-- Список друзей -->
+            <div class="travelers-grid" id="friendsContainer"></div>
+        </div>
+    </div>
+    
+    <script src="profile.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="profile.js"></script>
+
+</body>
+</html>

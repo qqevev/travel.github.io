@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход / Регистрация - TravelTogether</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        window.SUPABASE_URL = 'https://eibahaogtrwdqyprsmzz.supabase.co';
+        window.SUPABASE_KEY = 'sb_publishable_qiYrU8QkIDiZCM_Z1qzd-w_xk0cMb9Q';
+    </script>
+    
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .auth-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .auth-tab.active {
+            color: #e07a5f;
+        }
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #e07a5f;
+            border-radius: 3px 3px 0 0;
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #e07a5f;
+        }
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+        .form-footer a {
+            color: #e07a5f;
+            text-decoration: none;
+        }
+        .password-input {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .checkbox-label input {
+            width: auto;
+        }
+        .btn-block {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e07a5f;
+            color: #e07a5f;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-outline:hover {
+            background: #e07a5f;
+            color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #e07a5f, #81b29a);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-umbrella-beach"></i>
+                <span>TravelTogether</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="login.html" class="active">Войти</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">Вход</button>
+                <button class="auth-tab" id="registerTab">Регистрация</button>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <h2>Войти в систему</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Электронная почта</label>
+                    <input type="email" id="loginEmail" placeholder="Ваш email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <div class="password-input">
+                        <input type="password" id="loginPassword" placeholder="Ваш пароль" required>
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Запомнить меня</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Войти в аккаунт</button>
+                <div class="form-footer">
+                    <p>Еще нет аккаунта? <a href="#" id="switchToRegister">Зарегистрироваться</a></p>
+                </div>
+            </form>
+            
+            <form id="registerForm" class="auth-form">
+                <h2>Создать аккаунт</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="registerFirstName">Имя</label>
+                        <input type="text" id="registerFirstName" placeholder="Имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerLastName">Фамилия</label>
+                        <input type="text" id="registerLastName" placeholder="Фамилия" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Электронная почта</label>
+                    <input type="email" id="registerEmail" placeholder="Ваш email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <div class="password-input">
+                        <input type="password" id="registerPassword" placeholder="Придумайте пароль" required>
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Подтвердите пароль</label>
+                    <div class="password-input">
+                        <input type="password" id="registerConfirmPassword" placeholder="Повторите пароль" required>
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="acceptTerms" required>
+                        <span>Я принимаю условия использования</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Создать аккаунт</button>
+                <div class="form-footer">
+                    <p>Уже есть аккаунт? <a href="#" id="switchToLogin">Войти</a></p>
+                </div>
+            </form>
+            
+            <div class="back-home">
+                <a href="index.html" class="btn-outline">
+                    <i class="fas fa-arrow-left"></i> На главную
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-umbrella-beach"></i>
+                        <span>TravelTogether</span>
+                    </div>
+                    <p class="footer-description">Планируйте незабываемые путешествия с друзьями.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Функции</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Создание поездок</a></li>
+                        <li><a href="index.html">Приглашение друзей</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Поддержка</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Помощь</a></li>
+                        <li><a href="#">Контакты</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 TravelTogether. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.querySelectorAll('.password-toggle').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const icon = this.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+        
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+        
+        function showLogin() {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.classList.add('active');
+            registerForm.classList.remove('active');
+        }
+        function showRegister() {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.classList.add('active');
+            loginForm.classList.remove('active');
+        }
+        if (loginTab) loginTab.addEventListener('click', showLogin);
+        if (registerTab) registerTab.addEventListener('click', showRegister);
+        if (switchToRegister) switchToRegister.addEventListener('click', (e) => { e.preventDefault(); showRegister(); });
+        if (switchToLogin) switchToLogin.addEventListener('click', (e) => { e.preventDefault(); showLogin(); });
+    </script>
+</body>
+</html>

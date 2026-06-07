@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelTogether - Планируйте путешествия с друзьями</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- НАСТРОЙКИ SUPABASE -->
+    <script>
+        // Твой URL проекта
+        window.SUPABASE_URL = 'https://eibahaogtrwdqyprsmzz.supabase.co';
+        // Твой ПУБЛИЧНЫЙ ключ (можно показывать всем)
+        window.SUPABASE_KEY = 'sb_publishable_qiYrU8QkIDiZCM_Z1qzd-w_xk0cMb9Q';
+    </script>
+    
+    <!-- Подключение Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Прелоадер -->
+    <div class="preloader">
+        <div class="preloader-content">
+            <div class="logo-animation">
+                <i class="fas fa-umbrella-beach"></i>
+                <span>TravelTogether</span>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-umbrella-beach"></i>
+                <span>TravelTogether</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Главная</a>
+                <a href="#explore"><i class="fas fa-compass"></i> Исследовать</a>
+                <a href="#trips"><i class="fas fa-suitcase"></i> Поездки</a>
+                <a href="#map"><i class="fas fa-map-marked-alt"></i> Карта</a>
+                <a href="#community"><i class="fas fa-users"></i> Сообщество</a>
+                
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">
+                        <img src="images/avatars/default.jpg" alt="Аватар">
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-circle"></i> Мой профиль</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Настройки</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                    </div>
+                </div>
+        
+                <button class="btn btn-gradient" id="createTripNavBtn">
+                    <i class="fas fa-plus-circle"></i> Создать поездку
+                </button>
+            </div>
+            
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Герой-секция -->
+    <section class="hero">
+        <div class="animated-bg"></div>
+        <div class="hero-background">
+            <div class="particles" id="particles-js"></div>
+            <div class="gradient-overlay"></div>
+        </div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Путешествуйте вместе,</span>
+                        <br>планируйте легко
+                    </h1>
+                    <p class="hero-subtitle">
+                        Создавайте маршруты, голосуйте за места, делитесь бюджетом 
+                        и собирайте компанию для незабываемых приключений
+                    </p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalTripsCount">1,250+</div>
+                            <div class="stat-label">Поездок спланировано</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="activeUsers">5,800+</div>
+                            <div class="stat-label">Путешественников</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="destinationsCount">120+</div>
+                            <div class="stat-label">Направлений</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" id="startPlanningBtn">
+                            <i class="fas fa-rocket"></i> Начать планирование
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-visual" id="heroVisual">
+    <div class="floating-card card-1" id="heroCard1">
+        <div class="card-header">
+            <img id="heroCard1Img" src="" alt="">
+            <div class="card-badge">Популярно</div>
+        </div>
+        <div class="card-body">
+            <h4 id="heroCard1Title">Загрузка...</h4>
+            <div class="card-meta">
+                <span><i class="fas fa-users"></i> <span id="heroCard1People">0</span> человек</span>
+                <span><i class="fas fa-calendar"></i> <span id="heroCard1Days">0</span> дней</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="floating-card card-2" id="heroCard2">
+        <div class="card-header">
+            <img id="heroCard2Img" src="" alt="">
+            <div class="card-badge active">Активно</div>
+        </div>
+        <div class="card-body">
+            <h4 id="heroCard2Title">Загрузка...</h4>
+            <div class="card-meta">
+                <span><i class="fas fa-users"></i> <span id="heroCard2People">0</span> человек</span>
+                <span><i class="fas fa-wallet"></i> <span id="heroCard2Budget">0</span> ₽</span>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+
+    <!-- Быстрый старт -->
+    <section class="quick-start" id="explore">
+        <div class="container">
+            <div class="section-header">
+                <h2>Создайте поездку за 5 минут</h2>
+                <p class="section-subtitle">Все необходимое для идеального путешествия в одном месте</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Выберите направление</h3>
+                    <p>Исследуйте популярные маршруты или создайте свой собственный</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Пригласите друзей</h3>
+                    <p>Добавьте участников и распределите роли в поездке</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Спланируйте даты</h3>
+                    <p>Синхронизируйте календари и выберите лучшие даты</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Рассчитайте бюджет</h3>
+                    <p>Контролируйте расходы и делите затраты поровну</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Карта путешествий -->
+<section class="map-section" id="map">
+    <div class="container">
+        <div class="section-header">
+            <h2>Карта путешествий</h2>
+            <p class="section-subtitle">Где вы уже побывали и куда планируете отправиться</p>
+        </div>
+        
+        <div class="map-wrapper" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div id="travelMap" style="height: 450px; width: 100%; z-index: 1;"></div>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <p style="color: var(--gray); font-size: 0.9rem;">
+                <i class="fas fa-map-marker-alt" style="color: #6c63ff;"></i> 
+                Маркеры показывают направления ваших поездок
+            </p>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Мои поездки -->
+<section class="my-trips" id="trips">
+    <div class="container">
+        <div class="section-header">
+            <h2>Мои поездки</h2>
+            <div class="section-actions">
+                <button class="btn btn-primary" id="createTripBtn">
+                    <i class="fas fa-plus"></i> Новая поездка
+                </button>
+            </div>
+        </div>
+        
+        <!-- БЛОК ФИЛЬТРОВ -->
+        <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <input type="text" id="filterSearchInput" placeholder="🔍 Поиск по названию..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            <select id="filterStatusSelect" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                <option value="all">Все статусы</option>
+                <option value="planned">Запланировано</option>
+                <option value="active">Активно</option>
+                <option value="completed">Завершено</option>
+            </select>
+            <button id="filterResetBtn" class="btn btn-outline">Сбросить</button>
+        </div>
+        
+        <div class="trips-tabs">
+            <button class="tab-btn active" data-tab="all">Все</button>
+            <button class="tab-btn" data-tab="active">Активные</button>
+            <button class="tab-btn" data-tab="planned">Запланированные</button>
+            <button class="tab-btn" data-tab="completed">Завершенные</button>
+        </div>
+        
+        <div class="trips-grid" id="tripsContainer">
+            <!-- Поездки загружаются через JS -->
+        </div>
+    </div>
+</section>
+
+    <!-- Сообщество -->
+    <section class="community" id="community">
+        <div class="container">
+            <div class="section-header">
+                <h2>Путешественники рядом</h2>
+                <p class="section-subtitle">Найдите попутчиков для вашей следующей поездки</p>
+            </div>
+            
+            <div class="community-filters">
+                <div class="filter-group">
+                    <label>Интересы:</label>
+                    <div class="tags">
+                        <span class="tag active">Все</span>
+                        <span class="tag">Горы</span>
+                        <span class="tag">Пляж</span>
+                        <span class="tag">Город</span>
+                        <span class="tag">Природа</span>
+                        <span class="tag">Экстрим</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="travelers-grid" id="travelersContainer">
+                <!-- Путешественники загружаются через JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Виджет погоды -->
+<div class="weather-widget" id="weatherWidget">
+    <div class="weather-header">
+        <i class="fas fa-cloud-sun"></i>
+        <span>Погода</span>
+        <button class="weather-settings" id="weatherSettingsBtn">
+            <i class="fas fa-map-marker-alt"></i>
+        </button>
+    </div>
+    <div class="weather-body">
+        <div class="weather-location" id="weatherLocation">Загрузка...</div>
+        <div class="weather-temp" id="weatherTemp">--°C</div>
+        <div class="weather-icon">
+            <img id="weatherIcon" src="" alt="">
+        </div>
+        <div class="weather-desc" id="weatherDesc">--</div>
+        <div class="weather-details">
+            <div class="weather-detail">
+                <i class="fas fa-tint"></i>
+                <span id="weatherHumidity">--%</span>
+            </div>
+            <div class="weather-detail">
+                <i class="fas fa-wind"></i>
+                <span id="weatherWind">-- м/с</span>
+            </div>
+            <div class="weather-detail">
+                <i class="fas fa-thermometer-half"></i>
+                <span id="weatherFeels">--°C</span>
+            </div>
+        </div>
+        <div class="weather-update">
+            <small id="weatherUpdateTime"></small>
+            <button class="weather-refresh" id="refreshWeatherBtn">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора города -->
+<div class="modal" id="cityModal">
+    <div class="modal-content" style="max-width: 350px;">
+        <div class="modal-header">
+            <h3>Выбрать город</h3>
+            <button class="modal-close cityModalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="cityInput">Название города</label>
+                <input type="text" id="cityInput" placeholder="Например: Москва">
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" id="saveCityBtn">Сохранить</button>
+                <button class="btn btn-outline" id="useLocationBtn">📍 Моё местоположение</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Чат -->
+<div class="chat-widget" id="chatWidget">
+    <div class="chat-header">
+        <h4><i class="fas fa-comments"></i> Чат поездки</h4>
+        <button class="chat-toggle" id="toggleChat">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </div>
+    <div class="chat-body">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Сообщения загружаются через JS -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Напишите сообщение..." id="chatInput">
+            <button class="btn btn-icon" id="sendMessageBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Модальные окна -->
+    <div class="modal" id="createTripModal">
+        <div class="modal-content">
+            <!-- Контент модального окна будет загружен через JS -->
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Leaflet для карты (один раз) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- СНАЧАЛА script.js (ОСНОВНОЙ) -->
+    <script src="script.js"></script>
+    
+    <!-- ПОТОМ map.js (КАРТА) -->
+    <script src="map.js"></script>
+</body>
+</html>
